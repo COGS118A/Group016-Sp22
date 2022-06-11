@@ -3,7 +3,6 @@ import glob
 from tqdm import tqdm
 import numpy as np
 import pandas as pd
-from sklearn.model_selection import train_test_split
 
 if __name__ == "__main__":
     EEG_dir                   = './EEG'
@@ -28,6 +27,7 @@ if __name__ == "__main__":
             sample_cap = min(num_of_files)
         for event in tqdm(subday):
             event_str = event.split('\\')[-1]
+            print(suj, day, event_str)
             i = 0
             while i < sample_cap:
                 f = os.listdir(event)
@@ -43,10 +43,11 @@ if __name__ == "__main__":
     s = np.full((spind.shape[0], 1), -1)
     n = np.zeros((neither.shape[0], 1))
 
-    labels = np.concatenate((s, c, n), axis=0)
     data = np.concatenate((spind, comp, neither), axis=0)
+    labels = np.concatenate((s, c, n), axis=0)
+
+    np.save('./dataset_1-30.npy', data)
+    np.save('./dataset_labels_1-30.npy', labels)
 
     # For train/test arrays, use something like:
     # X_train, X_test, y_train, y_test = train_test_split(data, labels, test_size=0.33, random_state=42)
-
-    np.save('./dataset.npy', data)
